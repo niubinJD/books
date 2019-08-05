@@ -86,9 +86,11 @@
     
     进入阻塞状态，只有针对此对象调用notify()或notifyAll()方法后，等待此对象锁的线程进入就绪状态
 
-*  noify()与notifyAll()的区别？
+*  noify()与notifyAll()的区别？notify通知的线程是哪一个？
     
-    他们都是指当前线程放弃它所占用的对象锁，同时通知其他等待线程来争夺对象锁，但notify()只通知一个，notifyAll()则会通知所有需要该对象锁的线程（会造成资源的浪费）
+    他们都是指当前线程放弃它所占用的对象锁，同时通知其他等待线程来争夺对象锁，但notify()只通知一个，notifyAll()则会通知所有需要该对象锁的线程（会造成资源的浪费）。
+
+    notify()方法唤醒线程时，会随机通知等待队列中的一个线程。
 
 *  什么时常量池？在哪？如何操作？
     
@@ -138,3 +140,65 @@
     3. newScheduledThreadPool(创建一个定长线程池，支持定时和周期性任务执行)
     
     4. newSingleThreadExecutor(创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序（FIFO，LIFO，优先级）执行。)
+
+* lock与synchronized的区别？
+  
+  synchronized是java关键字可用在方法和代码块上，通过jvm来控制和释放锁，它提供的是非公平锁，不能手动释放，当执行完毕或异常后有jvm控制释放；lock是juc下的一个接口，他的实现类为reentrentlock，与synchronized一样默认是非公平锁，可设置为公平锁，需要手动加锁，释放锁
+
+
+* ArrayList, Vector, LinkedList区别？
+
+    ArrayList与Vector底层都是用数组实现，LinedList使用双向链表实现
+
+    Vector是线程安全的，ArrayList与LinkedList不是
+
+* HashMap在使用可变对象作为key时，会丢失数据（即对象数据修改后，hashcode改变，map.get(obj)无法获取到value）
+
+* serialVersionUID是类的版本,在进行反序列化的时候会验证serialVersionUID，如果不一致，会抛出异常
+
+  final 属性初始化只能在构造函数中或在定义时显示赋值
+
+
+* 反射：
+    1. class.forName(className) 加载类并返回其对象引用
+    2. 类反射： class.getSimpleName() -> 类名； class.getModifiers() -> 获得修饰符； class.getSuperClass() -> 获得父类； class.getInterface() -> 获得接口
+    3. 反射创建对象： 先获取构造参数，但会调用newInstance()方法；
+
+* 线程创建：
+    1. 继承Thread
+    2. 实现Runnable
+    3. Callable 或 Future 接口
+   
+* Callable与Future的区别？
+    callable类似于runnable接口，但runnable不会返回结果，并且无法抛出返回结果的异常，而callable被线程执行后，可以通过Future拿到返回值
+
+* 线程状态： 新建, 运行， 就绪， 休眠， 终止
+
+* 动态代理与静态代理的区别： 动态代理使用反射，只能代理基于接口实现的类
+
+* java8新特性：
+    1. lambda表达式和函数式接口
+    2. 接口的默认方法和静态方法。默认方法使用default定义，可以覆盖
+    3. 方法引用。 system.out::println
+    4. 重复注解.使用@Repeatable注解实现
+    5. 更好的类型推断
+    6. 扩宽注解的应用场景
+    7. Optional， Streams
+    8. 新的date/time api
+    9. 对base64编码的原生支持
+    10. 新的Nashorn JavaScript引擎
+    11. 并行数组
+    12. 使用元空间（MetaSpace）替代永久代(PermGen space)
+    13. 类依赖分析器jdeps。使用方法：jdeps org.springframework.core-3.0.5.RELEASE.jar
+
+
+* switch(param) 接受的参数类型包含int, char, byte, short, String, enum, 
+
+* 使用jdbc对事务进行管理？
+    jdbc中事务都是由Connection对象控制。需要先获取到Connection对象，然后关闭事务的自动提交(conn.setAutoCommit(false))，
+    然后执行事务, 在事务执行过程中可以设置保存点（connection.setSavepoint()),如果发生异常可以选择回滚到保存点（connection.rollback(savepoint))也可以全部回滚（connect.rollabck()）,
+     最后提交事务（connect.commit()）.
+
+* 死锁排查？ 使用jps -l查看进程号,然后使用jstack -l pid
+
+
